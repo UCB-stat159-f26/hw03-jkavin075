@@ -45,14 +45,32 @@ def _process_matches(matches: list, player_dob: str) -> pd.DataFrame:
 def get_player_data(player_name: str) -> pd.DataFrame:
     """Retrieve and process career data for a given tennis player."""
     formatted_name = _format_name(player_name)
-    url = f"https://www.tennisabstract.com/jsmatches/{formatted_name}Career.js"
-    resp = requests.get(url)
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.5'
+    }
     
-    if resp.status_code != 200 or "var morematchmx" not in resp.text:
-        raise ValueError(f"Invalid player name or data not found for: {player_name}")
+    career_url = f"https://www.tennisabstract.com/jsmatches/{formatted_name}Career.js"
+    resp_career = requests.get(career_url, headers=headers)
     
-    matches_str = _extract_variable(resp.text, "morematchmx")
-    player_dob = _extract_variable(resp.text, "playerdob").strip("'\"")
+    if resp_career.status_code != 200 or "var morematchmx" not in resp_career.text:
+        raise ValueError(f"Invalid player name or match data not found for: {player_name}")
     
-    matches_list = ast.literal_eval(matches_str.replace('""', '""'))
+    matches_str = _extract_variable(resp_career.text, "morematchmx")
+    matches_list = ast.literal_eval(matches_str)
+
+    bio_url = f"https://www.tennisabstract.com/jsmatches/{formatted_name}.js"
+    resp_bio = requests.get(bio_url, headers=headers)
+    
+    if resp_bio.status_code != 200:
+        raise ValueError(f"Could not find biographical data file for: {player_name}")
+        
+    try:
+        player_dob_raw = _extract_variable(resp_bio.text, "dob")
+    except ValueError:
+        player_dob_raw = _extract_variable(resp_bio.text, "playerdob")
+        
+    player_dob = player_dob_raw.replace('"', '').replace("'", "")
+    
     return _process_matches(matches_list, player_dob)
