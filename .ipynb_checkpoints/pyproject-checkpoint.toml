@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tennis_career"
+version = "0.1.0"
+description = "Retrieve and plot tennis player career matches from tennisabstract.com"
+authors = [{name = "Your Name"}]
+dependencies = [
+    "pandas",
+    "requests",
+    "matplotlib",
+    "seaborn"
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
