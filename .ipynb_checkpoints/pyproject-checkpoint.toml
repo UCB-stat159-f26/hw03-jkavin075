@@ -3,10 +3,10 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "tennis_career"
+name = "hw03-jkavin075"
 version = "0.1.0"
 description = "Retrieve and plot tennis player career matches from tennisabstract.com"
-authors = [{name = "Your Name"}]
+authors = [{name = "Kavin Jegathesan"}]
 dependencies = [
     "pandas",
     "requests",
