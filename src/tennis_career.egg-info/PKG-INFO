@@ -1,0 +1,9 @@
+Metadata-Version: 2.4
+Name: tennis_career
+Version: 0.1.0
+Summary: Retrieve and plot tennis player career matches from tennisabstract.com
+Author: Kavin Jegathesan
+Requires-Dist: pandas
+Requires-Dist: requests
+Requires-Dist: matplotlib
+Requires-Dist: seaborn
